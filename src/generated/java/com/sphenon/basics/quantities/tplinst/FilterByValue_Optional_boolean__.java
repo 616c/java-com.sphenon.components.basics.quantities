@@ -1,18 +1,4 @@
 // instantiated with javainst.pl from /workspace/sphenon/projects/components/basics/retriever/v0001/origin/source/java/com/sphenon/basics/retriever/templates/FilterByValue.javatpl
-
-/****************************************************************************
-  Copyright 2001-2018 Sphenon GmbH
-
-  Licensed under the Apache License, Version 2.0 (the "License"); you may not
-  use this file except in compliance with the License. You may obtain a copy
-  of the License at http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
-  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
-  License for the specific language governing permissions and limitations
-  under the License.
-*****************************************************************************/
 // please do not modify this file directly
 package com.sphenon.basics.quantities.tplinst;
 
@@ -28,32 +14,26 @@ import com.sphenon.basics.locating.*;
 import com.sphenon.basics.context.*;
 import com.sphenon.basics.exception.*;
 import com.sphenon.basics.retriever.*;
+import com.sphenon.basics.retriever.classes.*;
+import com.sphenon.basics.metadata.*;
 
-public class FilterByValue_Optional_boolean__ implements Filter_Optional_boolean__, FilterByValue  {
+public class FilterByValue_Optional_boolean__ extends GenericFilterBase<Optional_boolean_> implements Filter_Optional_boolean__, FilterByValue  {
+
+    static protected Type target_type;
 
     public FilterByValue_Optional_boolean__ (CallContext context) {
-        this.setFilterEnabled(context, false);
+        super(context, target_type == null ? (target_type = TypeManager.get(context, Optional_boolean_.class)) : target_type);
     }
 
     public FilterByValue_Optional_boolean__ (CallContext context, Optional_boolean_ value) {
+        this(context);
         this.setValue(context, value);
     }
 
     public FilterByValue_Optional_boolean__ (CallContext context, Optional_boolean_... values) {
+        this(context);
         this.setValues(context, values);
     }
-
-    protected boolean filter_enabled;
-
-    public boolean getFilterEnabled (CallContext context) {
-        return this.filter_enabled;
-    }
-
-    public void setFilterEnabled (CallContext context, boolean filter_enabled) {
-        this.filter_enabled = filter_enabled;
-    }
-
-
 
     protected Optional_boolean_[] values;
 
@@ -63,6 +43,14 @@ public class FilterByValue_Optional_boolean__ implements Filter_Optional_boolean
 
     public void setValue (CallContext context, Optional_boolean_ value) {
         this.setValues(context, value);
+    }
+
+    public void setValue (CallContext context, String value) {
+        setValue(context, toType(context, value));
+    }
+
+    protected Optional_boolean_ toType(CallContext context, String value) {
+        return null;
     }
 
     public Optional_boolean_[] getValues (CallContext context) {
@@ -76,6 +64,10 @@ public class FilterByValue_Optional_boolean__ implements Filter_Optional_boolean
 
     public Object getValueAsObject (CallContext context) {
         return this.values != null && this.values.length == 1 ? this.values[0] : this.values;
+    }
+
+    public FilterByValue setValueAsObject(CallContext context, Object value) {
+        return this.setValueAsObject(context, (Optional_boolean_) value);
     }
 
     public boolean matches (CallContext context, Optional_boolean_ object) {

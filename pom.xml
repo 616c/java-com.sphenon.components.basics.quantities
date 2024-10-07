@@ -52,7 +52,17 @@
       <version>1.0.0</version>
     </dependency>      
     <dependency>
+      <artifactId>system</artifactId>
+      <groupId>com.sphenon.components.basics</groupId>
+      <version>1.0.0</version>
+    </dependency>      
+    <dependency>
       <artifactId>encoding</artifactId>
+      <groupId>com.sphenon.components.basics</groupId>
+      <version>1.0.0</version>
+    </dependency>      
+    <dependency>
+      <artifactId>expression</artifactId>
       <groupId>com.sphenon.components.basics</groupId>
       <version>1.0.0</version>
     </dependency>      
@@ -93,6 +103,11 @@
     </dependency>      
     <dependency>
       <artifactId>event</artifactId>
+      <groupId>com.sphenon.components.basics</groupId>
+      <version>1.0.0</version>
+    </dependency>      
+    <dependency>
+      <artifactId>metadata</artifactId>
       <groupId>com.sphenon.components.basics</groupId>
       <version>1.0.0</version>
     </dependency>      

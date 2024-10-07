@@ -1,18 +1,4 @@
 // instantiated with javainst.pl from /workspace/sphenon/projects/components/basics/retriever/v0001/origin/source/java/com/sphenon/basics/retriever/templates/FilterByRegExp.javatpl
-
-/****************************************************************************
-  Copyright 2001-2018 Sphenon GmbH
-
-  Licensed under the Apache License, Version 2.0 (the "License"); you may not
-  use this file except in compliance with the License. You may obtain a copy
-  of the License at http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
-  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
-  License for the specific language governing permissions and limitations
-  under the License.
-*****************************************************************************/
 // please do not modify this file directly
 package com.sphenon.basics.quantities.tplinst;
 
@@ -28,28 +14,24 @@ import com.sphenon.basics.locating.*;
 import com.sphenon.basics.context.*;
 import com.sphenon.basics.exception.*;
 import com.sphenon.basics.retriever.*;
+import com.sphenon.basics.retriever.classes.*;
+import com.sphenon.basics.metadata.*;
 
 import java.util.regex.*;
 
-public class FilterByRegExp_RichText_ implements FilterByExpression_RichText_ {
+public class FilterByRegExp_RichText_ extends GenericFilterBase<RichText> implements FilterByExpression_RichText_ {
 
     protected String  regexp;
     protected Pattern regexp_pattern;
 
-    protected boolean filter_enabled;
-
-    public boolean getFilterEnabled (CallContext context) {
-        return this.filter_enabled;
-    }
-
-    public void setFilterEnabled (CallContext context, boolean filter_enabled) {
-        this.filter_enabled = filter_enabled;
-    }
+    static protected Type target_type;
 
     public FilterByRegExp_RichText_ (CallContext context) {
+        super(context, target_type == null ? (target_type = TypeManager.get(context, RichText.class)) : target_type);
     }
 
     public FilterByRegExp_RichText_ (CallContext context, String regexp) throws PatternSyntaxException {
+        this(context);
         this.setRegExp(context, regexp);
     }
 
@@ -85,6 +67,10 @@ public class FilterByRegExp_RichText_ implements FilterByExpression_RichText_ {
                  || this.regexp.length() == 0
                  || this.regexp_pattern == null
                  || (object != null && regexp_pattern.matcher(instance.getText(context) ).matches()));
+    }
+
+    static public FilterByRegExp_RichText_ newInstance(CallContext context) {
+        return (FilterByRegExp_RichText_) Factory_Filter_RichText_.construct(context);
     }
 }
 

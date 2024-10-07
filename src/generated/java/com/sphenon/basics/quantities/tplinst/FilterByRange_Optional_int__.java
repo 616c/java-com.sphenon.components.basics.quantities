@@ -1,18 +1,4 @@
 // instantiated with javainst.pl from /workspace/sphenon/projects/components/basics/retriever/v0001/origin/source/java/com/sphenon/basics/retriever/templates/FilterByRange.javatpl
-
-/****************************************************************************
-  Copyright 2001-2018 Sphenon GmbH
-
-  Licensed under the Apache License, Version 2.0 (the "License"); you may not
-  use this file except in compliance with the License. You may obtain a copy
-  of the License at http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
-  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
-  License for the specific language governing permissions and limitations
-  under the License.
-*****************************************************************************/
 // please do not modify this file directly
 package com.sphenon.basics.quantities.tplinst;
 
@@ -28,36 +14,43 @@ import com.sphenon.basics.locating.*;
 import com.sphenon.basics.context.*;
 import com.sphenon.basics.exception.*;
 import com.sphenon.basics.retriever.*;
+import com.sphenon.basics.retriever.classes.*;
+import com.sphenon.basics.metadata.*;
 
-public class FilterByRange_Optional_int__ implements Filter_Optional_int__, FilterByRange {
+public class FilterByRange_Optional_int__ extends GenericFilterBase<Optional_int_> implements Filter_Optional_int__, FilterByRange {
 
-    protected Integer  minimum;
+    protected Integer minimum;
     protected Integer maximum;
+    protected boolean include_minimum;
+    protected boolean include_maximum;
+
+    static protected Type target_type;
 
     public FilterByRange_Optional_int__ (CallContext context) {
-        this.setFilterEnabled(context, false);
+        super(context, target_type == null ? (target_type = TypeManager.get(context, Optional_int_.class)) : target_type);
+        this.include_minimum = true;
+        this.include_maximum = true;
     }
 
     public FilterByRange_Optional_int__ (CallContext context, Integer minimum, Integer maximum) {
+        this(context);
         this.setMinimum(context, minimum);
         this.setMaximum(context, maximum);
     }
 
-    protected boolean filter_enabled;
-
-    public boolean getFilterEnabled (CallContext context) {
-        return this.filter_enabled;
-    }
-
-    public void setFilterEnabled (CallContext context, boolean filter_enabled) {
-        this.filter_enabled = filter_enabled;
+    public FilterByRange_Optional_int__ (CallContext context, Integer minimum, Integer maximum, boolean include_minimum, boolean include_maximum) {
+        this(context);
+        this.setMinimum(context, minimum);
+        this.setMaximum(context, maximum);
+        this.setIncludeMinimum(context, include_minimum);
+        this.setIncludeMaximum(context, include_maximum);
     }
 
     public Integer getMinimum (CallContext context) {
         return this.minimum;
     }
 
-    public Integer getMaxnimum (CallContext context) {
+    public Integer getMaximum (CallContext context) {
         return this.maximum;
     }
 
@@ -72,12 +65,46 @@ public class FilterByRange_Optional_int__ implements Filter_Optional_int__, Filt
         this.setFilterEnabled(context, (this.minimum == null && this.maximum == null ? false : true));
     }
 
+    public void setMinimum (CallContext context, String minimum) {
+        setMinimum(context, toType(context, minimum));
+    }
+
+    public void setMaximum (CallContext context, String maximum) {
+        setMaximum(context, toType(context, maximum));
+    }
+
+    protected Integer toType(CallContext context, String value) {
+        return (value.matches("[0-9]+") ? Integer.parseInt(value) : 0);
+    }
+
+    public boolean getIncludeMinimum (CallContext context) {
+        return this.include_minimum;
+    }
+
+    public void setIncludeMinimum (CallContext context, boolean include_minimum) {
+        this.include_minimum = include_minimum;
+    }
+
+    public boolean getIncludeMaximum (CallContext context) {
+        return this.include_maximum;
+    }
+
+    public void setIncludeMaximum (CallContext context, boolean include_maximum) {
+        this.include_maximum = include_maximum;
+    }
+
     public boolean matches (CallContext context, Optional_int_ object) {
         return (    (    this.minimum == null
-                      || (object != null && object.getValue(context) != null && (this.minimum).intValue() <= (object.getValue(context)).intValue()) || ((object == null || object.getValue(context) == null) && object instanceof OptionalUpperBound_int_)
+                      || (  this.include_minimum
+                            ? (object != null && object.getValue(context) != null && (this.minimum).intValue() <= (object.getValue(context)).intValue()) || ((object == null || object.getValue(context) == null) && object instanceof OptionalUpperBound_int_)
+                            : (object != null && object.getValue(context) != null && (this.minimum).intValue() < (object.getValue(context)).intValue()) || ((object == null || object.getValue(context) == null) && object instanceof OptionalUpperBound_int_)
+                         )
                     )
                  && (    this.maximum == null
-                      || (object != null && object.getValue(context) != null && (this.minimum).intValue() >= (object.getValue(context)).intValue()) || ((object == null || object.getValue(context) == null) && object instanceof OptionalLowerBound_int_)
+                      || (  this.include_maximum
+                            ? (object != null && object.getValue(context) != null && (this.minimum).intValue() >= (object.getValue(context)).intValue()) || ((object == null || object.getValue(context) == null) && object instanceof OptionalLowerBound_int_)
+                            : (object != null && object.getValue(context) != null && (this.minimum).intValue() > (object.getValue(context)).intValue()) || ((object == null || object.getValue(context) == null) && object instanceof OptionalLowerBound_int_)
+                         )
                     )
                );
     }
